@@ -6,7 +6,8 @@
             "compilerPath": "/usr/local/bin/sdcc",
             "includePath": [
                 "${workspaceFolder}/**",
-                "./**"
+                "./**",
+                "/usr/local/share/sdcc/include"
             ],
             "compilerArgs": [],
             "mergeConfigurations": false,

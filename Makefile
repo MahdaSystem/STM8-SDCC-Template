@@ -23,16 +23,16 @@ CC      = sdcc
 CFLAGS  = -mstm8 -lstm8 --opt-code-size
 
 # set output folder and target name
-OUTPUT_DIR 	= ./Build
+OUTPUT_DIR 	= Build
 TARGET_NAME	= main
 
 # set project source and include directories and source files
-PRJ_SRC_DIR  	= ./Core/Src
-PRJ_INC_DIR  	= ./Core/Inc
+PRJ_SRC_DIR  	= Core/Src
+PRJ_INC_DIR  	= Core/Inc
 PRJ_SRC_FILE	= 
 
 # set SPL paths
-SPL_ROOT	= ./SPL
+SPL_ROOT	= SPL
 
 # add required STM8S_EVAL modules
 EVAL_SOURCE							= 
@@ -43,6 +43,16 @@ EVAL_STM8S_128K_SOURCE	=
 # 
 # Do not edit below this line
 # 
+
+ifeq ($(OS),Windows_NT)
+INCLUDEDIRS := $(PRJ_INC_DIR)
+RMD := rd /s /q
+MD := mkdir
+else
+INCLUDEDIRS := $(shell find $(PRJ_INC_DIR) -type d)
+RMD = rm -r
+MD := mkdir -p
+endif
 
 # collect all source files of project
 PRJ_SOURCE := $(notdir $(wildcard $(patsubst %,%/*.c, $(PRJ_SRC_DIR))) $(PRJ_SRC_FILE))
@@ -63,7 +73,7 @@ EVAL_COMM_OBJECTS := $(addprefix $(OUTPUT_DIR)/, $(EVAL_COMM_SOURCE:.c=.rel))
 EVAL_STM8S_128K_OBJECTS := $(addprefix $(OUTPUT_DIR)/, $(EVAL_STM8S_128K_SOURCE:.c=.rel))
 
 # collect all include folders
-INCLUDE = -I$(PRJ_SRC_DIR) -I$(PRJ_INC_DIR) -I$(SPL_INC_DIR) -I$(EVAL_DIR) -I$(EVAL_COMM_DIR) -I$(EVAL_STM8S_128K_DIR)
+INCLUDE = $(patsubst %,-I%, $(INCLUDEDIRS:%/=%)) -I$(SPL_INC_DIR) -I$(EVAL_DIR) -I$(EVAL_COMM_DIR) -I$(EVAL_STM8S_128K_DIR)
 
 # collect all source directories
 VPATH=$(PRJ_SRC_DIR):$(SPL_SRC_DIR):$(EVAL_DIR):$(EVAL_COMM_DIR):$(EVAL_STM8S_128K_DIR)
@@ -79,7 +89,7 @@ $(SPL_LIB):
 	$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE)
 
 $(OUTPUT_DIR):
-	mkdir -p $(OUTPUT_DIR)
+	$(MD) $(OUTPUT_DIR)
 
 $(OUTPUT_DIR)/%.rel: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $?
@@ -92,7 +102,7 @@ $(TARGET): $(PRJ_OBJECTS) $(SPL_LIB) $(EVAL_OBJECTS) $(EVAL_COMM_OBJECTS) $(EVAL
 
 clean: 
 	$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE) clean
-	rm -fr $(OUTPUT_DIR)
+	$(RMD) -fr $(OUTPUT_DIR)
 
 re-build: clean all
 

@@ -82,6 +82,32 @@
                 ]
             },
             "problemMatcher": []
+        },
+        {
+            "label": "flash",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-c",
+                    "'make flash'"
+                ]
+            },
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "'make flash'"
+                ]
+            },
+            "osx": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "'make flash'"
+                ]
+            },
+            "problemMatcher": []
         }
     ]
 }

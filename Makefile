@@ -14,6 +14,8 @@
 
 # STM8 device (for supported devices see stm8s.h)
 DEVICE	= STM8S003
+# STM8 device suffix (for example use K3 for STM8S003K3)
+DEVICE_SUFFIX = K3
 
 # set compiler path & parameters 
 CC_ROOT	=
@@ -93,3 +95,6 @@ clean:
 	rm -fr $(OUTPUT_DIR)
 
 re-build: clean all
+
+flash: all
+	$(MAKE) -f flash.mk DEVICE=$(DEVICE)$(DEVICE_SUFFIX) TARGET=$(TARGET)

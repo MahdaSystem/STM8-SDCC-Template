@@ -31,17 +31,92 @@
 #include "stm8s_it.h"    /* SDCC patch: required by SDCC for interrupts */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_GPIO  GPIOD
+#define LED_PIN   GPIO_PIN_3
+
+#define USE_HSE   0
+
+
 /* Private function prototypes -----------------------------------------------*/
+void clock_setup(void);
+void GPIO_setup(void);
+
+void delay_ms(uint32_t d);
+
+
 /* Private functions ---------------------------------------------------------*/
 
 void main(void)
 {
+  clock_setup();
+  GPIO_setup();
+
   /* Infinite loop */
   while (1)
   {
+    GPIO_WriteReverse(LED_GPIO, LED_PIN);
+    delay_ms(1000);
   }
-  
 }
+
+void clock_setup(void)
+{
+  CLK_DeInit();
+  CLK_LSICmd(DISABLE);
+
+#if (USE_HSE)
+  CLK_HSECmd(ENABLE);
+  CLK_HSICmd(DISABLE);
+  while (CLK_GetFlagStatus(CLK_FLAG_HSERDY) == FALSE);
+#else
+  CLK_HSECmd(DISABLE);
+  CLK_HSICmd(ENABLE);
+  while (CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
+#endif
+
+  CLK_ClockSwitchCmd(ENABLE);
+  CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+
+#if (USE_HSE)
+  CLK_ClockSwitchConfig(CLK_SWITCHMODE_MANUAL, CLK_SOURCE_HSE,
+                        DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
+#else
+  CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+  CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI,
+                        DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
+#endif
+
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_SPI, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_AWU, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER5, DISABLE);
+  CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER6, DISABLE);
+}
+
+void GPIO_setup(void)
+{
+  // LED Pins
+  GPIO_Init(LED_GPIO, LED_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
+}
+
+void delay_ms(uint32_t d)
+{
+  uint32_t x = 0;
+  uint32_t fCPU = 0;
+  
+  fCPU = CLK_GetClockFreq();
+  x = fCPU / 1000;
+  x /= 50;
+  d *= x;
+
+  while (d--)
+    __asm__("nop");
+}
+
+
 
 #ifdef USE_FULL_ASSERT
 

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.make": "makefile",
+			"*.h": "c",
+			"*.c": "c"
+		}
+	}
+}

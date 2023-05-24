@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "SDCC",
+            "cStandard": "c11",
+            "compilerPath": "/usr/local/bin/sdcc",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "./**"
+            ],
+            "compilerArgs": [],
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [],
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "defines": [
+                "STM8S003"
+            ]
+        }
+    ],
+    "version": 4
+}

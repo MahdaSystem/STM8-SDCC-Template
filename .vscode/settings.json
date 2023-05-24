@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.make": "makefile",
+    "stm8s.h": "c"
+  }
+}

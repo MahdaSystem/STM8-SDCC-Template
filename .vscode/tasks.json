@@ -56,6 +56,32 @@
                 ]
             },
             "problemMatcher": []
+        },
+        {
+            "label": "re-build",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-c",
+                    "'make re-build'"
+                ]
+            },
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "'make re-build'"
+                ]
+            },
+            "osx": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "'make re-build'"
+                ]
+            },
+            "problemMatcher": []
         }
     ]
 }

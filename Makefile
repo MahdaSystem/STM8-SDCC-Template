@@ -91,3 +91,5 @@ $(TARGET): $(PRJ_OBJECTS) $(SPL_LIB) $(EVAL_OBJECTS) $(EVAL_COMM_OBJECTS) $(EVAL
 clean: 
 	$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE) clean
 	rm -fr $(OUTPUT_DIR)
+
+re-build: clean all

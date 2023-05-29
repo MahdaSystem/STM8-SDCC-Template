@@ -84,27 +84,30 @@ TARGET = $(OUTPUT_DIR)/$(TARGET_NAME).hex
 .PHONY: clean
 
 all: $(OUTPUT_DIR) $(TARGET) $(SPL_LIB)
+	@echo ***Executing 'all' complete!***
 
 $(SPL_LIB):
-	$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE)
+	@$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE)
 
 $(OUTPUT_DIR):
-	$(MD) $(OUTPUT_DIR)
+	@$(MD) $(OUTPUT_DIR)
 
 $(OUTPUT_DIR)/%.rel: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $?
+	@$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $?
 
 $(OUTPUT_DIR)/%.rel: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $? -o $@
+	@$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $? -o $@
 
 $(TARGET): $(PRJ_OBJECTS) $(SPL_LIB) $(EVAL_OBJECTS) $(EVAL_COMM_OBJECTS) $(EVAL_STM8S_128K_OBJECTS)
-	$(CC) $(CFLAGS) -o $(TARGET) -L$(SPL_LIB_DIR) -l$(SPL_LIB) $^
+	@$(CC) $(CFLAGS) -o $(TARGET) -L$(SPL_LIB_DIR) -l$(SPL_LIB) $^
 
 clean: 
-	$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE) clean
-	$(RMD) -fr $(OUTPUT_DIR)
+	@$(MAKE) -C $(SPL_MAKE_DIR) DEVICE=$(DEVICE) clean
+	@$(RMD) $(OUTPUT_DIR)
+	@echo ***Cleanup complete!***
 
 re-build: clean all
 
 flash: all
-	$(MAKE) -f flash.mk DEVICE=$(DEVICE)$(DEVICE_SUFFIX) TARGET=$(TARGET)
+	@$(MAKE) -f flash.mk DEVICE=$(DEVICE)$(DEVICE_SUFFIX) TARGET=$(TARGET)
+	@echo ***flash complete!***

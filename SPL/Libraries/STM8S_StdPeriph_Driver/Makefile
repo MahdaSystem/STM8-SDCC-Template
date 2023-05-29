@@ -80,16 +80,16 @@ endif
 all: $(OUTPUT_DIR) $(TARGET)
 
 $(OUTPUT_DIR):
-	$(MD) $(OUTPUT_DIR)
+	@$(MD) $(OUTPUT_DIR)
 
 $(OUTPUT_DIR)/%.rel: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $?
+	@$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $?
 
 $(OUTPUT_DIR)/%.rel: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $? -o $@
+	@$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $? -o $@
 
 $(TARGET): $(PRJ_OBJECTS) $(SPL_OBJECTS) $(EVAL_OBJECTS) $(EVAL_COMM_OBJECTS) $(EVAL_STM8S_128K_OBJECTS)
-	$(AR) -rc $(TARGET) $^
+	@$(AR) -rc $(TARGET) $^
 
 clean: 
-	$(RMD) $(OUTPUT_DIR)
+	@$(RMD) $(OUTPUT_DIR)

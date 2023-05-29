@@ -67,12 +67,20 @@ INCLUDE = -I$(PRJ_SRC_DIR) -I$(SPL_INC_DIR) -I$(SPL_CONF_DIR) -I$(EVAL_DIR) -I$(
 # collect all source directories
 VPATH=$(PRJ_SRC_DIR):$(SPL_SRC_DIR):$(EVAL_DIR):$(EVAL_COMM_DIR):$(EVAL_STM8S_128K_DIR)
 
+ifeq ($(OS),Windows_NT)
+RMD := rd /s /q
+MD := mkdir
+else
+RMD = rm -r
+MD := mkdir -p
+endif
+
 .PHONY: clean
 
 all: $(OUTPUT_DIR) $(TARGET)
 
 $(OUTPUT_DIR):
-	mkdir -p $(OUTPUT_DIR)
+	$(MD) $(OUTPUT_DIR)
 
 $(OUTPUT_DIR)/%.rel: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -D$(DEVICE) -c $?
@@ -84,5 +92,4 @@ $(TARGET): $(PRJ_OBJECTS) $(SPL_OBJECTS) $(EVAL_OBJECTS) $(EVAL_COMM_OBJECTS) $(
 	$(AR) -rc $(TARGET) $^
 
 clean: 
-	rm -fr $(OUTPUT_DIR)
-
+	$(RMD) $(OUTPUT_DIR)
